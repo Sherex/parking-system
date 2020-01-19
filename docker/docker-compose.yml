@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  rethinkdb:
+    container_name: "parking-system-rethinkdb"
+    image: rethinkdb
+    volumes:
+      - "./volumes/rethinkdb/:/data"
+    ports:
+      - 8080:8080

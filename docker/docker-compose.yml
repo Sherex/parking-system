@@ -7,3 +7,10 @@ services:
       - "./volumes/rethinkdb/:/data"
     ports:
       - 8080:8080
+  backend:
+    container_name: "parking-system-backend"
+    build: ../api
+    ports:
+      - 8081:3000
+    depends_on: 
+      - rethinkdb

@@ -1,11 +1,13 @@
-FROM node:10.13.0-alpine
-
+FROM node:13.6-alpine
 # Env
 ENV TIME_ZONE=Europe/Oslo
-ENV NODE_ENV dev
+ENV NODE_ENV=dev
 
 # Set the timezone in docker
-RUN apk --update add tzdata
+RUN apk --virtual --no-cache --update add tzdata \
+  &&  cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+  &&  echo "${TIME_ZONE}" > /etc/timezone \
+  &&  apk del tzdata
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
@@ -16,10 +18,10 @@ COPY package.json .
 RUN npm install
 
 # Copy all other source code to work directory
-ADD . /usr/src/app
+COPY . /usr/src/app
 # TypeScript
-RUN npm run tsc 
-#  $$ rm -rf !("dist"|"node_modules"|"package.json")
+RUN npm run tsc \
+  && rm -rf ./src/
 
 # Start
 CMD [ "npm", "start" ]
